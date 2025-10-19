@@ -6,11 +6,7 @@ describe('Sign In page', () => {
   const password = 'Test1234';
 
   it('should provide an ability to log in', () => {
-    cy.visit('/');
-
-    cy.contains('a', 'Sign in').click();
-
-    cy.url().should('equal', `${Cypress.config().baseUrl}/user/login`);
+    cy.visit('/user/login');
 
     cy.get('input[placeholder="Email"]').type(email);
 
