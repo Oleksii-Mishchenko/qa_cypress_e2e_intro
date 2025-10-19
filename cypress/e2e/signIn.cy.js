@@ -1,9 +1,20 @@
 /// <reference types="cypress" />
 
+const { faker } = require('@faker-js/faker');
+
 describe('Sign In page', () => {
-  const username = 'user001';
-  const email = 'user001@hmail.com';
-  const password = 'Test1234';
+  const username = `${faker.person.firstName()}_${faker.person.lastName()}`;
+  const email = faker.internet.email().toLowerCase();
+  const password = faker.internet.password();
+
+  before(() => {
+    cy.request({
+      method: 'POST',
+      url: '/api/users',
+      body: { user: { username, email, password } },
+      failOnStatusCode: false
+    });
+  });
 
   it('should provide an ability to log in', () => {
     cy.visit('/user/login');
@@ -14,8 +25,8 @@ describe('Sign In page', () => {
 
     cy.contains('button[type="submit"]', 'Sign in').click();
 
-    cy.get('nav').contains('a', username).should('be.visible');
+    cy.get('nav').contains('a', username.toLowerCase()).should('be.visible');
 
-    cy.url().should('equal', `${Cypress.config().baseUrl}/`);
+    cy.location('pathname').should('equal', `/`);
   });
 });
